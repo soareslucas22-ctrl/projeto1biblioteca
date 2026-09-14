@@ -1,8 +1,6 @@
-#!/tmp/guest-9tauax/Projeto-biblioteca/projeto1biblioteca/venv/bin/python3
-# -*- coding: utf-8 -*-
-import re
+#!/tmp/guest-cofmty/Lucas/projeto1biblioteca/venv/bin/python
 import sys
 from flask.cli import main
 if __name__ == '__main__':
-    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
     sys.exit(main())
