@@ -131,9 +131,6 @@ def cadastrar_livro():
     except Exception as erro:
         return f"Erro ao cadastrar livro: {erro}"
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
 # Rotas para biliotecario
 @app.route("/bibliotecarios")
 def listar_bibliotecarios():
@@ -161,7 +158,7 @@ def listar_bibliotecarios():
 
 @app.route("/bibliotecarios/novo")
 def formulario_bibliotecario():
-    return render_template("bibliotecario_form.html")
+    return render_template("bibliotecarios_form.html")
 
 
 
@@ -199,3 +196,7 @@ def cadastrar_bibliotecario():
 
     except Exception as erro:
         return f"Erro ao cadastrar bibliotecário: {erro}"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
