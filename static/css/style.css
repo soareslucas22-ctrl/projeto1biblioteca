@@ -6,8 +6,8 @@ body {
 
 
 header {
-    background-color: #2c3e50;
-    color: white;
+    background-color: #3f4244;
+    color: rgb(132, 223, 102);
     padding: 20px;
 }
 
@@ -44,7 +44,7 @@ main {
 
 
 h2 {
-    color: #2c3e50;
+    color: #3f4244;
 }
 
 
@@ -56,7 +56,7 @@ table {
 
 
 th {
-    background-color: #34495e;
+    background-color: #3f4244;
     color: white;
 }
 
@@ -80,11 +80,15 @@ label {
 
 
 input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    margin-bottom: 12px;
-    border: 1px solid #aaa;
+    input,
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 4px;
+        margin-bottom: 12px;
+        border: 1px solid #aaa;
+    }
+    
 }
 
 
