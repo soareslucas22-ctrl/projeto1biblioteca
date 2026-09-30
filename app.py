@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, flash
 import mysql.connector
 from config import DB_CONFIG
+from datetime import datetime
+
 
 app = Flask(__name__)
 app.secret_key = "biblioteca_escolar"
@@ -57,6 +59,7 @@ def cadastrar_aluno():
 
         cursor.execute(sql, valores)
         conexao.commit()
+
         flash("Aluno cadastrado com sucesso!", "sucesso")
 
         cursor.close()
@@ -64,7 +67,11 @@ def cadastrar_aluno():
 
         return redirect("/alunos")
 
-    except Exception as erro: 
+    except Exception as erro:  
+        flash(f"Erro ao atualizar aluno: {erro}", "erro")
+        return redirect("/alunos")
+
+         
         flash(f"Erro ao cadastrar aluno: {erro}", "erro")
         return redirect("/alunos")
 
@@ -120,6 +127,7 @@ def cadastrar_livro():
 
         cursor.execute(sql, valores)
         conexao.commit()
+        flash("Livro cadastrado com sucesso!", "sucesso")
 
 
         cursor.close()
@@ -232,6 +240,8 @@ def listar_emprestimos():
 
         cursor.close()
         conexao.close()
+        flash("Empréstimo registrado com sucesso!", "sucesso")
+
 
 
         return render_template("emprestimos.html", emprestimos=emprestimos)
@@ -275,6 +285,8 @@ def formulario_emprestimo():
 
 
     except Exception as erro:
+        flash("Livro devolvido com sucesso!", "sucesso")
+
         return f"Erro ao carregar formulário de empréstimo: {erro}"
 
 
@@ -331,6 +343,8 @@ def cadastrar_emprestimo():
 
         cursor.close()
         conexao.close()
+        flash("Erro ao registrar empréstimo.", "erro")
+
 
 
         return redirect("/emprestimos")
@@ -386,6 +400,7 @@ def devolver_livro(id_emprestimo):
 
         cursor.close()
         conexao.close()
+        flash("Livro devolvido com sucesso!", "sucesso")
 
 
         return redirect("/emprestimos")
@@ -410,15 +425,15 @@ def editar_aluno(id_aluno):
 
         aluno = cursor.fetchone()
 
-
         cursor.close()
         conexao.close()
-
-
         return render_template("aluno_editar.html", aluno=aluno)
 
 
     except Exception as erro:
+        flash(f"Erro ao atualizar aluno: {erro}", "erro")
+        return redirect("/alunos")
+
         return f"Erro ao carregar aluno: {erro}"
 
 
@@ -452,6 +467,7 @@ def atualizar_aluno(id_aluno):
 
         cursor.execute(sql, valores)
         conexao.commit()
+        flash("Aluno atualizado com sucesso!", "sucesso")
 
 
         cursor.close()
@@ -487,11 +503,13 @@ def excluir_aluno(id_aluno):
         conexao.close()
 
 
+        flash("Aluno excluído com sucesso!", "sucesso")
         return redirect("/alunos")
 
 
     except Exception as erro:
-        return f"Erro ao excluir aluno: {erro}"
+        flash("Não foi possível excluir o aluno. Verifique se ele possui empréstimos cadastrados.", "erro")
+        return redirect("/alunos")
 
 @app.route("/livros/editar/<int:id_livro>")
 def editar_livro(id_livro):
@@ -512,11 +530,13 @@ def editar_livro(id_livro):
         cursor.close()
         conexao.close()
 
-
         return render_template("livro_editar.html", livro=livro)
 
 
-    except Exception as erro:
+    except Exception as erro:    
+        flash("Não foi possível excluir o aluno. Verifique se ele possui empréstimos cadastrados.", "erro")
+        return redirect("/alunos")
+
         return f"Erro ao carregar livro: {erro}"
 
 
@@ -550,7 +570,7 @@ def atualizar_livro(id_livro):
 
         cursor.execute(sql, valores)
         conexao.commit()
-
+        flash("Livro atualizado com sucesso!", "sucesso")
 
         cursor.close()
         conexao.close()
@@ -579,6 +599,7 @@ def excluir_livro(id_livro):
 
 
         conexao.commit()
+        flash("Livro excluído com sucesso!", "sucesso")
 
 
         cursor.close()
@@ -609,6 +630,7 @@ def editar_bibliotecario(id_bibliotecario):
 
         cursor.close()
         conexao.close()
+        flash("Bibliotecário cadastrado com sucesso!", "sucesso")
 
 
         return render_template(
@@ -647,7 +669,7 @@ def atualizar_bibliotecario(id_bibliotecario):
 
         cursor.execute(sql, valores)
         conexao.commit()
-
+        flash("Bibliotecário atualizado com sucesso!", "sucesso")
 
         cursor.close()
         conexao.close()
@@ -677,15 +699,19 @@ def excluir_bibliotecario(id_bibliotecario):
 
         conexao.commit()
 
-
         cursor.close()
         conexao.close()
+        flash("Bibliotecário excluído com sucesso!", "sucesso")
+
 
 
         return redirect("/bibliotecarios")
 
 
     except Exception as erro:
+        flash("Não foi possível excluir o livro. Verifique se ele possui empréstimos cadastrados.", "erro")
+
+
         return f"Erro ao excluir bibliotecário: {erro}"
 
 
