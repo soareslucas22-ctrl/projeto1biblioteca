@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 
@@ -10,6 +11,25 @@
 <p>
     <a href="/livros/novo">Cadastrar novo livro</a>
 </p>
+
+
+<form method="GET" action="/livros">
+
+
+    <label>Pesquisar livro:</label>
+    <input type="text" name="pesquisa" value="{{ pesquisa }}" placeholder="Título, autor, categoria ou status">
+
+
+    <button type="submit">Pesquisar</button>
+
+
+    <a href="/livros">Limpar</a>
+
+
+</form>
+
+
+<br>
 
 
 <table>
@@ -35,11 +55,7 @@
             <td>{{ livro.status }}</td>
             <td>
                 <a href="/livros/editar/{{ livro.id_livro }}">Editar</a>
-
-
                 |
-
-
                 <a href="/livros/excluir/{{ livro.id_livro }}"
                    onclick="return confirm('Deseja realmente excluir este livro?')">
                     Excluir
