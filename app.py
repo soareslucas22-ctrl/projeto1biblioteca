@@ -59,6 +59,16 @@ def cadastrar_aluno():
 
         cursor.execute(sql, valores)
         conexao.commit()
+        
+        if len(nome.strip()) < 3:
+            flash("O nome do aluno deve ter pelo menos 3 caracteres.", "erro")
+            return redirect("/alunos/novo")
+
+
+        if telefone and len(telefone.strip()) < 8:
+            flash("O telefone deve ter pelo menos 8 caracteres.", "erro")
+            return redirect("/alunos/novo")
+
 
         flash("Aluno cadastrado com sucesso!", "sucesso")
 
@@ -126,7 +136,17 @@ def cadastrar_livro():
 
 
         cursor.execute(sql, valores)
-        conexao.commit()
+        conexao.commit() 
+        if len(titulo.strip()) < 2:
+            flash("O título do livro deve ter pelo menos 2 caracteres.", "erro")
+            return redirect("/livros/novo")
+
+
+        if len(autor.strip()) < 3:
+            flash("O nome do autor deve ter pelo menos 3 caracteres.", "erro")
+            return redirect("/livros/novo")
+
+
         flash("Livro cadastrado com sucesso!", "sucesso")
 
 
@@ -153,13 +173,14 @@ def listar_bibliotecarios():
 
 
         cursor.close()
-        conexao.close()
+        conexao.close() 
 
 
         return render_template("bibliotecarios.html", bibliotecarios=bibliotecarios)
 
 
-    except Exception as erro:
+    except Exception as erro: 
+        flash("Bibliotecário cadastrado com sucesso!", "sucesso")
         return f"Erro ao listar bibliotecários: {erro}"
 
 
@@ -193,7 +214,18 @@ def cadastrar_bibliotecario():
 
 
         cursor.execute(sql, valores)
-        conexao.commit()
+        conexao.commit()     
+        if len(nome.strip()) < 3:
+            flash("O nome do bibliotecário deve ter pelo menos 3 caracteres.", "erro")
+            return redirect("/bibliotecarios/novo")
+
+
+        if "@" not in email or "." not in email:
+            flash("Informe um e-mail válido.", "erro")
+            return redirect("/bibliotecarios/novo")
+ 
+
+        flash("Bibliotecário cadastrado com sucesso!", "sucesso")
 
 
         cursor.close()
@@ -240,14 +272,13 @@ def listar_emprestimos():
 
         cursor.close()
         conexao.close()
-        flash("Empréstimo registrado com sucesso!", "sucesso")
-
 
 
         return render_template("emprestimos.html", emprestimos=emprestimos)
 
 
     except Exception as erro:
+        flash("Empréstimo registrado com sucesso!", "sucesso")
         return f"Erro ao listar empréstimos: {erro}"
 
 
@@ -300,10 +331,42 @@ def cadastrar_emprestimo():
         id_bibliotecario = request.form["id_bibliotecario"]
         data_emprestimo = request.form["data_emprestimo"]
         data_prevista_devolucao = request.form["data_prevista_devolucao"]
+        
+        data_emp = datetime.strptime(data_emprestimo, "%Y-%m-%d")
+        data_dev = datetime.strptime(data_prevista_devolucao, "%Y-%m-%d")
+
+
+        if data_dev < data_emp:
+            flash("A data prevista de devolução não pode ser menor que a data do empréstimo.", "erro")
+            return redirect("/emprestimos/novo")
 
 
         conexao = conectar()
         cursor = conexao.cursor()
+        
+        cursor.execute(
+            "SELECT status FROM livro WHERE id_livro = %s",
+            (id_livro,)
+        )
+
+
+        livro = cursor.fetchone()
+
+
+        if livro is None:
+            flash("Livro não encontrado.", "erro")
+            cursor.close()
+            conexao.close()
+            return redirect("/emprestimos/novo")
+
+
+        if livro[0] != "Disponível":
+            flash("Este livro não está disponível para empréstimo.", "erro")
+            cursor.close()
+            conexao.close()
+            return redirect("/emprestimos/novo")
+
+
 
 
         sql = """
@@ -343,7 +406,7 @@ def cadastrar_emprestimo():
 
         cursor.close()
         conexao.close()
-        flash("Erro ao registrar empréstimo.", "erro")
+        flash("Empréstimo registrado com sucesso!", "sucesso")
 
 
 
@@ -630,9 +693,7 @@ def editar_bibliotecario(id_bibliotecario):
 
         cursor.close()
         conexao.close()
-        flash("Bibliotecário cadastrado com sucesso!", "sucesso")
-
-
+       
         return render_template(
             "bibliotecario_editar.html",
             bibliotecario=bibliotecario
