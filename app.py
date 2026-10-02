@@ -335,7 +335,7 @@ def cadastrar_bibliotecario():
 
 # Rotas para empréstimos
 
-app.route("/emprestimos")
+@app.route("/emprestimos")
 def listar_emprestimos():
     try:
         status = request.args.get("status", "")

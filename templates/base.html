@@ -12,8 +12,15 @@
 
 
 <body>
+
+
     <header>
-        <h1>Sistema Biblioteca Escolar</h1>
+        <div class="topo">
+            <h1>Sistema Biblioteca Escolar</h1>
+            <p>Projeto Integrador - 1º Ano</p>
+        </div>
+
+
         <nav>
             <a href="/">Início</a>
             <a href="/alunos">Alunos</a>
@@ -21,11 +28,10 @@
             <a href="/bibliotecarios">Bibliotecários</a>
             <a href="/emprestimos">Empréstimos</a>
             <a href="/emprestimos/atrasados">Atrasados</a>
-
         </nav>
-
-        <hr>
     </header>
+
+
     <main>
 
 
@@ -38,10 +44,19 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-       
+
+
         {% block conteudo %}
         {% endblock %}
+
+
     </main>
+
+
+    <footer>
+        <p>@2026 - Curso Técnico em Desenvolvimento de Sistemas</p>
+    </footer>
+
 
 </body>
 </html>
