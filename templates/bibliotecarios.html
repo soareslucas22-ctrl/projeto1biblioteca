@@ -7,11 +7,6 @@
 <h2>Bibliotecários Cadastrados</h2>
 
 
-<p>
-    <a href="/bibliotecarios/novo">Cadastrar novo bibliotecário</a>
-</p>
-
-
 <table>
     <thead>
         <tr>
@@ -21,6 +16,23 @@
             <th>Ações</th>
         </tr>
     </thead>
+
+
+<p>
+    <a href="/bibliotecarios/novo">Cadastrar novo bibliotecário</a>
+</p>
+
+<form method="GET" action="/bibliotecarios">
+
+
+    <label>Pesquisar bibliotecario:</label>
+    <input type="text" name="pesquisa" value="{{ pesquisa }}" placeholder="nome ou email ">
+
+
+    <button type="submit">Pesquisar</button>
+
+
+    <a href="/bibliotecarios">Limpar</a>
 
 
     <tbody>

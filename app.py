@@ -254,36 +254,32 @@ def cadastrar_livro():
         return f"Erro ao cadastrar livro: {erro}"
 
 # Rotas para biliotecario
+from flask import request # Certifique-se de importar o request no início do arquivo
+
 @app.route("/bibliotecarios")
 def listar_bibliotecarios():
     try:
+        pesquisa = request.args.get("pesquisa", "")
+        
         conexao = conectar()
         cursor = conexao.cursor(dictionary=True)
 
+        if pesquisa:
+            query = "SELECT * FROM bibliotecario WHERE nome LIKE %s OR email LIKE %s"
+            termo = f"%{pesquisa}%"
+            cursor.execute(query, (termo, termo))
+        else:
+            cursor.execute("SELECT * FROM bibliotecario")
 
-        cursor.execute("SELECT * FROM bibliotecario")
         bibliotecarios = cursor.fetchall()
 
-
         cursor.close()
-        conexao.close() 
+        conexao.close()
 
+        return render_template("bibliotecarios.html", bibliotecarios=bibliotecarios, pesquisa=pesquisa)
 
-        return render_template("bibliotecarios.html", bibliotecarios=bibliotecarios)
-
-
-    except Exception as erro: 
-        flash("Bibliotecário cadastrado com sucesso!", "sucesso")
+    except Exception as erro:
         return f"Erro ao listar bibliotecários: {erro}"
-
-
-
-
-@app.route("/bibliotecarios/novo")
-def formulario_bibliotecario():
-    return render_template("bibliotecarios_form.html")
-
-
 
 
 @app.route("/bibliotecarios/cadastrar", methods=["POST"])
