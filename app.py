@@ -931,27 +931,24 @@ def login():
 
 
 
-@app.route("/login/autenticar", methods=["POST"])
+@app.route('/login/autenticar', methods=['POST'])
 def autenticar():
-    email = request.form["email"]
+    email = request.form.get("email")
     senha = request.form["senha"]
-
 
     try:
         conexao = conectar()
         cursor = conexao.cursor(dictionary=True)
 
-
         sql = """
             SELECT *
             FROM usuario
-            WHERE email = %s
-              AND senha = %s
-              AND status = 'Ativo'
+            WHERE (email = %s OR login = %s)
+            AND senha = %s
+            AND status = 'Ativo'
         """
 
-
-        cursor.execute(sql, (email, senha))
+        cursor.execute(sql, (email, email, senha))
         usuario = cursor.fetchone()
 
 
